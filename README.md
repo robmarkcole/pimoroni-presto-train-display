@@ -15,6 +15,15 @@ the account.
 The first release should require no Raspberry Pi, server, cloud function, or
 JSON translation proxy.
 
+## UI concepts
+
+Two initial 480×480 display concepts for the Worcester Park to London Waterloo
+route. The departures shown are illustrative sample data, not live Darwin data.
+
+| Platform board | Journey focus |
+|:--:|:--:|
+| ![Platform-style departure board showing three sample Worcester Park to London Waterloo services](docs/images/presto-platform-board.png) | ![Journey-focused departure display highlighting the next Worcester Park to London Waterloo service](docs/images/presto-journey-focus.png) |
+
 ## References and assumptions
 
 - Presto hardware: <https://shop.pimoroni.com/products/presto>
