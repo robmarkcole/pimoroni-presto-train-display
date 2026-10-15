@@ -1,0 +1,13 @@
+ORIGIN_CRS = "WCP"
+DESTINATION_CRS = "WAT"
+STATION_NAME = "Worcester Park"
+DESTINATION_NAME = "London Waterloo"
+
+# Copy the generated base URL shown by your subscribed RDM Live Departure
+# Board product. Do not guess this value from examples or commit account URLs.
+RDM_BASE_URL = "https://REPLACE-WITH-YOUR-RDM-LDBWS-BASE-URL"
+
+NUM_ROWS = 10
+TIME_WINDOW_MINUTES = 120
+REFRESH_SECONDS = 60
+SCREEN_BRIGHTNESS = 0.85

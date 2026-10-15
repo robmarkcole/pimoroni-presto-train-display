@@ -1,4 +1,22 @@
-# Pimoroni Presto Train Display — implementation plan
+# Pimoroni Presto Train Display
+
+A self-contained MicroPython departure board for Pimoroni Presto, using live
+National Rail Darwin data from the Rail Data Marketplace (RDM) JSON API.
+
+## Current status
+
+The first working milestone includes:
+
+- a MicroPython RDM client using HTTPS and the `x-apikey` header;
+- flexible Darwin response normalisation for services and calling points;
+- a 480×480 platform-style Presto renderer;
+- one-minute refreshes, bounded retry backoff and stale-data retention;
+- automatic Europe/London daylight-saving conversion;
+- configuration and secret templates; and
+- host tests plus an on-device display smoke test.
+
+Live requests require an RDM account subscribed to the public Live Departure
+Board JSON product. The generated product URL and consumer key are not included.
 
 ## Decision summary
 
@@ -23,6 +41,55 @@ route. The departures shown are illustrative sample data, not live Darwin data.
 | Platform board | Journey focus |
 |:--:|:--:|
 | ![Platform-style departure board showing three sample Worcester Park to London Waterloo services](docs/images/presto-platform-board.png) | ![Journey-focused departure display highlighting the next Worcester Park to London Waterloo service](docs/images/presto-journey-focus.png) |
+
+## Configure and test
+
+Create untracked device configuration files:
+
+```sh
+cp config.py.example config.py
+cp secrets.py.example secrets.py
+```
+
+Set `RDM_BASE_URL` in `config.py` to the generated base URL shown by the
+subscribed RDM product. Set the Wi-Fi values and `RDM_CONSUMER_KEY` in
+`secrets.py`. Do not commit either file.
+
+Run the dependency-free host tests:
+
+```sh
+python3 -m unittest discover -s tests -v
+```
+
+With a Presto connected over USB, preview the renderer directly from the repo
+without changing the board's filesystem:
+
+```sh
+uvx mpremote connect /dev/cu.usbmodem101 mount . run tools/presto_smoke.py
+```
+
+## Install on Presto
+
+Installing this application as `main.py` replaces the stock launcher. Back up
+the current launcher first:
+
+```sh
+mkdir -p backups
+uvx mpremote connect /dev/cu.usbmodem101 fs cp :main.py backups/presto-main.py
+```
+
+Then upload the application, support modules and your untracked configuration:
+
+```sh
+uvx mpremote connect /dev/cu.usbmodem101 fs cp -r lib :
+uvx mpremote connect /dev/cu.usbmodem101 fs cp main.py :main.py
+uvx mpremote connect /dev/cu.usbmodem101 fs cp config.py :config.py
+uvx mpremote connect /dev/cu.usbmodem101 fs cp secrets.py :secrets.py
+uvx mpremote connect /dev/cu.usbmodem101 reset
+```
+
+The application keeps the last good board visible when a refresh fails and
+marks it stale. It never logs the RDM key or Wi-Fi password.
 
 ## References and assumptions
 
@@ -173,7 +240,7 @@ One request per minute is about 40,320 requests per four-week period, comfortabl
 below National Rail's published SOAP allowance. The subscribed RDM JSON product
 terms must still be checked independently.
 
-## Proposed repository layout
+## Repository layout
 
 ```text
 .
@@ -186,16 +253,15 @@ terms must still be checked independently.
 │   ├── board_view.py        # 480×480 platform-style renderer
 │   ├── uk_time.py           # Clock and Europe/London DST handling
 │   └── app_state.py         # Refresh, retry and stale-data state
-├── assets/                  # Redistributable fonts/images with licence notes
+├── docs/images/             # UI concepts and screenshots
 ├── tests/
 │   ├── fixtures/            # Redacted API responses
 │   ├── test_departures.py
+│   ├── test_rail_api.py
 │   ├── test_uk_time.py
 │   └── test_app_state.py
-├── tools/                   # Host-side upload or validation helpers
-├── README.md
-├── LICENSE
-└── PLAN.md
+├── tools/presto_smoke.py    # On-device renderer smoke test
+└── README.md
 ```
 
 Prefer small modules with no CPython-only dependencies. Core parsing and state
