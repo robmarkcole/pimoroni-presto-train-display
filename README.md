@@ -16,7 +16,8 @@ The first working milestone includes:
 - host tests plus an on-device display smoke test.
 
 Live requests require an RDM account subscribed to the public Live Departure
-Board JSON product. The generated product URL and consumer key are not included.
+Board JSON product. The shared endpoint is included; the account's consumer key
+is not.
 
 ## Decision summary
 
@@ -51,9 +52,11 @@ cp config.py.example config.py
 cp secrets.py.example secrets.py
 ```
 
-Set `RDM_BASE_URL` in `config.py` to the generated base URL shown by the
-subscribed RDM product. Set the Wi-Fi values and `RDM_CONSUMER_KEY` in
-`secrets.py`. Do not commit either file.
+The current shared `RDM_BASE_URL` is already present in `config.py.example`.
+Set the Wi-Fi values and the consumer key issued after subscription as
+`RDM_CONSUMER_KEY` in `secrets.py`. Do not commit either file. Keep the URL
+configurable so it can be updated if RDM publishes a new product path or API
+version.
 
 Run the dependency-free host tests:
 
@@ -182,11 +185,17 @@ the LEDs for disruption state; routine refreshes must not make sounds.
 
 1. Register at <https://raildata.org.uk/>.
 2. Subscribe to the public/open Live Departure Board product.
-3. Copy the product's generated base URL and consumer API key.
+3. Copy the issued consumer API key.
 4. Confirm the current licence, attribution and fair-usage terms during setup.
 
-Do not assume an example product slug will remain stable. Store the RDM base URL
-in configuration so a product/version change does not require code changes.
+The current shared product base URL is:
+
+```text
+https://api1.raildata.org.uk/1010-live-departure-board-dep1_2/LDBWS/api/20220120
+```
+
+It is not account-specific. Store it in configuration so a future product or
+version change does not require application-code changes.
 
 ### Request
 
@@ -253,7 +262,9 @@ terms must still be checked independently.
 │   ├── board_view.py        # 480×480 platform-style renderer
 │   ├── uk_time.py           # Clock and Europe/London DST handling
 │   └── app_state.py         # Refresh, retry and stale-data state
-├── docs/images/             # UI concepts and screenshots
+├── docs/
+│   ├── home-assistant.md    # Optional future Home Assistant provider
+│   └── images/              # UI concepts and screenshots
 ├── tests/
 │   ├── fixtures/            # Redacted API responses
 │   ├── test_departures.py
@@ -328,6 +339,17 @@ If the full response cannot be handled reliably:
 
 The bridge is deliberately last because it adds another service, credential
 boundary and failure mode to what should be a standalone desktop display.
+
+## Optional future Home Assistant source
+
+Users who already run Home Assistant could optionally read departure data from
+the [`homeassistant_nationalrail`](https://github.com/darrenparkinson/homeassistant_nationalrail)
+sensor instead of having Presto call RDM directly. This is a future extension,
+not a version 1 dependency: the default installation remains self-contained and
+requires no Raspberry Pi, Home Assistant instance or translation proxy.
+
+The proposed adapter and its security, configuration and data-mapping boundaries
+are documented in [Home Assistant data source](docs/home-assistant.md).
 
 ## Testing strategy
 
@@ -416,11 +438,10 @@ never erase a valid cached board.
 
 ## Open questions to resolve during Milestone 0
 
-1. What exact RDM product base URL and JSON schema does a new subscription issue?
-2. Does the shipping Presto firmware validate the RDM TLS certificate chain, and
+1. Does the shipping Presto firmware validate the RDM TLS certificate chain, and
    how are CA updates handled?
-3. What is peak heap usage for ten `GetDepBoardWithDetails` rows?
-4. Which font can provide the desired UK dot-matrix character while permitting
+2. What is peak heap usage for ten `GetDepBoardWithDetails` rows?
+3. Which font can provide the desired UK dot-matrix character while permitting
    redistribution?
-5. Does the subscribed product require a particular attribution asset or wording
+4. Does the subscribed product require a particular attribution asset or wording
    on a 480×480 physical display?

@@ -3,9 +3,9 @@ DESTINATION_CRS = "WAT"
 STATION_NAME = "Worcester Park"
 DESTINATION_NAME = "London Waterloo"
 
-# Copy the generated base URL shown by your subscribed RDM Live Departure
-# Board product. Do not guess this value from examples or commit account URLs.
-RDM_BASE_URL = "https://REPLACE-WITH-YOUR-RDM-LDBWS-BASE-URL"
+# Shared endpoint for the current RDM Live Departure Board REST/JSON product.
+# Keep this configurable so a future product or API version can replace it.
+RDM_BASE_URL = "https://api1.raildata.org.uk/1010-live-departure-board-dep1_2/LDBWS/api/20220120"
 
 NUM_ROWS = 10
 TIME_WINDOW_MINUTES = 120
