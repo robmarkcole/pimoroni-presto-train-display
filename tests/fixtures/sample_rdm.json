@@ -1,0 +1,37 @@
+{
+  "locationName": "Worcester Park",
+  "crs": "WCP",
+  "generatedAt": "2026-10-15T10:36:00Z",
+  "trainServices": [
+    {
+      "serviceID": "sample-1",
+      "std": "10:42",
+      "etd": "On time",
+      "platform": "2",
+      "operator": "South Western Railway",
+      "destination": [{"locationName": "London Waterloo", "crs": "WAT"}],
+      "subsequentCallingPoints": [{
+        "callingPoint": [
+          {"locationName": "Motspur Park", "st": "10:45", "et": "On time"},
+          {"locationName": "Raynes Park", "st": "10:48", "et": "On time"},
+          {"locationName": "Wimbledon", "st": "10:52", "et": "On time"}
+        ]
+      }]
+    },
+    {
+      "serviceID": "sample-2",
+      "std": "10:57",
+      "etd": "10:59",
+      "platform": "2",
+      "destination": [{"locationName": "London Waterloo", "crs": "WAT"}]
+    },
+    {
+      "serviceID": "sample-3",
+      "std": "11:12",
+      "etd": "Cancelled",
+      "isCancelled": true,
+      "cancelReason": "A train fault",
+      "destination": [{"locationName": "London Waterloo", "crs": "WAT"}]
+    }
+  ]
+}

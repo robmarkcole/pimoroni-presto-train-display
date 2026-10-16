@@ -1,0 +1,16 @@
+STATIONS = (
+    ("WCP", "Worcester Park"),
+    ("MAL", "Malden Manor"),
+    ("MOT", "Motspur Park"),
+)
+DESTINATION_CRS = "WAT"
+DESTINATION_NAME = "London Waterloo"
+
+# Shared endpoint for the current RDM Live Departure Board REST/JSON product.
+# Keep this configurable so a future product or API version can replace it.
+RDM_BASE_URL = "https://api1.raildata.org.uk/1010-live-departure-board-dep1_2/LDBWS/api/20220120"
+
+NUM_ROWS = 10
+TIME_WINDOW_MINUTES = 120
+REFRESH_SECONDS = 60
+SCREEN_BRIGHTNESS = 0.85
