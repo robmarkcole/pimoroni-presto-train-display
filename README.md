@@ -184,9 +184,15 @@ the LEDs for disruption state; routine refreshes must not make sounds.
 ### Account setup
 
 1. Register at <https://raildata.org.uk/>.
-2. Subscribe to the public/open Live Departure Board product.
-3. Copy the issued consumer API key.
-4. Confirm the current licence, attribution and fair-usage terms during setup.
+2. Open the public
+   [Live Departure Board product](https://raildata.org.uk/dashboard/dataProduct/P-d81d6eaf-8060-4467-a339-1c833e50cbbe/overview),
+   select **Subscribe**, and accept the current terms.
+3. Wait for the subscription to show as **Active**. Key provisioning can take about
+   a minute after approval.
+4. Open the product's **Specification** tab and copy the **Consumer key** shown
+   under **API access credentials**.
+5. Put the key in the untracked `secrets.py` as `RDM_CONSUMER_KEY`. Never commit
+   or share this value.
 
 The current shared product base URL is:
 
