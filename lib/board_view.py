@@ -80,6 +80,10 @@ class BoardView:
         self._text("Tap reset or check configuration", 28, 420, self.muted, 2)
         self.presto.update()
 
+    def render_sleep(self):
+        self._clear()
+        self.presto.update()
+
     def render_board(self, board, station_name, destination_name, stale_age=None, clock=""):
         self._clear()
         self._text(station_name.upper(), 24, 22, self.amber, 2)

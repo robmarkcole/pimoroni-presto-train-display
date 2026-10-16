@@ -1,6 +1,12 @@
 import unittest
 
-from lib.train_app import DEFAULT_STATIONS, departure_index_at, is_tap, station_index_at
+from lib.train_app import (
+    DEFAULT_STATIONS,
+    departure_index_at,
+    is_tap,
+    sleep_is_due,
+    station_index_at,
+)
 
 
 class TrainAppTest(unittest.TestCase):
@@ -18,6 +24,12 @@ class TrainAppTest(unittest.TestCase):
     def test_drag_is_not_a_tap(self):
         self.assertTrue(is_tap(200, 120, 205, 125))
         self.assertFalse(is_tap(200, 120, 240, 120))
+
+    def test_screen_sleep_timeout(self):
+        ticks_diff = lambda now, then: now - then
+        self.assertFalse(sleep_is_due(299999, 0, 300, ticks_diff))
+        self.assertTrue(sleep_is_due(300000, 0, 300, ticks_diff))
+        self.assertFalse(sleep_is_due(999999, 0, 0, ticks_diff))
 
     def test_station_rows_map_to_picker_indexes(self):
         self.assertEqual(station_index_at(200, 150), 0)
