@@ -10,11 +10,12 @@ required.
 
 - Starts with a touch picker for Worcester Park, Malden Manor, Motspur Park or
   New Malden.
-- Shows the next three direct services to London Waterloo.
+- Shows the next four direct services to London Waterloo.
 - Displays scheduled time, live status, platform and calling points.
 - Opens a Journey focus screen when a departure is tapped.
 - Shows journey duration, arrival time and a live departure countdown.
 - Refreshes every minute and retains the last valid board after a failed update.
+- Blanks the screen after five minutes of inactivity and wakes on the first tap.
 - Handles UK daylight-saving time automatically.
 - Can boot directly into the app or run from Presto's demo carousel.
 
@@ -66,8 +67,9 @@ RDM_CONSUMER_KEY = "your-rdm-consumer-key"
 ```
 
 `config.py` contains the station list, Waterloo destination filter, RDM URL,
-refresh interval and screen brightness. Both real configuration files are
-ignored by Git; never commit credentials.
+refresh interval, screen brightness and inactivity timeout. Set
+`SCREEN_TIMEOUT_SECONDS = 0` to keep the display on continuously. Both real
+configuration files are ignored by Git; never commit credentials.
 
 ## Install: direct boot
 

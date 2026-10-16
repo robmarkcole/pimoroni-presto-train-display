@@ -11,8 +11,8 @@ from lib.uk_time import format_clock
 
 
 DEPARTURE_TOP = 96
-DEPARTURE_HEIGHT = 104
-DEPARTURE_COUNT = 3
+DEPARTURE_HEIGHT = 86
+DEPARTURE_COUNT = 4
 STATION_PICKER_TOP = 118
 STATION_PICKER_ROW_HEIGHT = 80
 DEFAULT_STATIONS = (
@@ -36,6 +36,10 @@ def is_tap(start_x, start_y, end_x, end_y):
     return abs(end_x - start_x) <= 12 and abs(end_y - start_y) <= 12
 
 
+def sleep_is_due(now, last_activity, timeout_seconds, ticks_diff):
+    return timeout_seconds > 0 and ticks_diff(now, last_activity) >= timeout_seconds * 1000
+
+
 def station_index_at(x, y, station_count=len(DEFAULT_STATIONS)):
     if x < 18 or x >= 462 or y < STATION_PICKER_TOP:
         return None
@@ -45,17 +49,42 @@ def station_index_at(x, y, station_count=len(DEFAULT_STATIONS)):
     return index
 
 
-def wait_for_station(presto, view, stations, destination_name):
+def wait_for_station(presto, view, stations, destination_name, brightness, timeout_seconds):
     view.render_station_picker(stations, destination_name)
     touch = presto.touch
     touch_was_down = False
     touch_start_x = 0
     touch_start_y = 0
+    last_activity = time.ticks_ms()
+    screen_asleep = False
+    wake_touch_seen = False
     while True:
+        now = time.ticks_ms()
+        if not screen_asleep and sleep_is_due(now, last_activity, timeout_seconds, time.ticks_diff):
+            view.render_sleep()
+            if hasattr(presto, "set_backlight"):
+                presto.set_backlight(0)
+            screen_asleep = True
+            touch_was_down = False
+
         touch.poll()
+        if screen_asleep:
+            if touch.state:
+                wake_touch_seen = True
+            elif wake_touch_seen:
+                view.render_station_picker(stations, destination_name)
+                if hasattr(presto, "set_backlight"):
+                    presto.set_backlight(brightness)
+                screen_asleep = False
+                wake_touch_seen = False
+                last_activity = now
+            time.sleep_ms(50)
+            continue
+
         if touch.state and not touch_was_down:
             touch_start_x = touch.x
             touch_start_y = touch.y
+            last_activity = now
         elif not touch.state and touch_was_down:
             if is_tap(touch_start_x, touch_start_y, touch.x, touch.y):
                 index = station_index_at(touch.x, touch.y, len(stations))
@@ -82,11 +111,20 @@ def run():
 
     try:
         config, secrets = load_settings()
+        brightness = getattr(config, "SCREEN_BRIGHTNESS", 0.85)
+        screen_timeout_seconds = getattr(config, "SCREEN_TIMEOUT_SECONDS", 300)
         if hasattr(presto, "set_backlight"):
-            presto.set_backlight(getattr(config, "SCREEN_BRIGHTNESS", 0.85))
+            presto.set_backlight(brightness)
         stations = getattr(config, "STATIONS", DEFAULT_STATIONS)
         destination_name = getattr(config, "DESTINATION_NAME", "Departures")
-        origin_crs, station_name = wait_for_station(presto, view, stations, destination_name)
+        origin_crs, station_name = wait_for_station(
+            presto,
+            view,
+            stations,
+            destination_name,
+            brightness,
+            screen_timeout_seconds,
+        )
         view.render_loading(station_name)
         presto.connect()
         try:
@@ -106,6 +144,9 @@ def run():
     touch_was_down = False
     touch_start_x = 0
     touch_start_y = 0
+    last_activity = time.ticks_ms()
+    screen_asleep = False
+    wake_touch_seen = False
 
     def render_current():
         stale_age = None
@@ -129,20 +170,48 @@ def run():
                 )
                 board = normalise_board(payload)
                 state.record_success(board, now, time.ticks_add)
-                render_current()
+                if not screen_asleep:
+                    render_current()
                 del payload
                 gc.collect()
             except Exception as exc:
                 state.record_failure(exc, now, time.ticks_add)
-                if state.board:
+                if state.board and not screen_asleep:
                     render_current()
-                else:
+                elif not screen_asleep:
                     view.render_error("Live data unavailable", str(exc))
 
+        now = time.ticks_ms()
+        if not screen_asleep and sleep_is_due(now, last_activity, screen_timeout_seconds, time.ticks_diff):
+            view.render_sleep()
+            if hasattr(presto, "set_backlight"):
+                presto.set_backlight(0)
+            screen_asleep = True
+            touch_was_down = False
+
         touch.poll()
+        if screen_asleep:
+            if touch.state:
+                wake_touch_seen = True
+            elif wake_touch_seen:
+                if state.board:
+                    render_current()
+                elif state.last_error:
+                    view.render_error("Live data unavailable", str(state.last_error))
+                else:
+                    view.render_loading(station_name)
+                if hasattr(presto, "set_backlight"):
+                    presto.set_backlight(brightness)
+                screen_asleep = False
+                wake_touch_seen = False
+                last_activity = now
+            time.sleep_ms(100)
+            continue
+
         if touch.state and not touch_was_down:
             touch_start_x = touch.x
             touch_start_y = touch.y
+            last_activity = now
         elif not touch.state and touch_was_down and state.board:
             if is_tap(touch_start_x, touch_start_y, touch.x, touch.y):
                 if selected_index is None:
