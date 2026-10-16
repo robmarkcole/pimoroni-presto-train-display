@@ -132,8 +132,6 @@ class BoardView:
         self._text((str(journey) + " min") if journey is not None else "-- min", 40, 274, self.cream, 3)
         self._text("Arrives", 270, 250, self.muted, 2)
         self._text(service.get("arrival") or "--:--", 270, 274, self.cream, 3)
-        self.display.set_pen(self.green if service.get("status_kind") == "on_time" else self.amber)
-        self.display.rectangle(40, 313, 380, 5)
 
         minutes = self._minutes_until(clock, service.get("scheduled"))
         if minutes is not None and minutes <= 180:
