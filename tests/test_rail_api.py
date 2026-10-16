@@ -36,12 +36,15 @@ class RailApiTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             build_departure_url("https://example.invalid", "WC1")
 
-    def test_closes_response_and_sends_key_header(self):
+    def test_closes_response_and_sends_required_headers(self):
         response = Response()
         requests = Requests(response)
         api = RailApi("https://example.invalid", "secret", requests)
         self.assertEqual(api.get_departures("WCP"), {"trainServices": []})
-        self.assertEqual(requests.calls[0][1]["x-apikey"], "secret")
+        headers = requests.calls[0][1]
+        self.assertEqual(headers["x-apikey"], "secret")
+        self.assertEqual(headers["accept"], "application/json")
+        self.assertEqual(headers["user-agent"], "pimoroni-presto-train-display/0.1")
         self.assertTrue(response.closed)
 
     def test_http_error_is_sanitised_and_response_is_closed(self):

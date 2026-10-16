@@ -1,6 +1,9 @@
 """Small MicroPython-friendly client for the RDM Live Departure Board API."""
 
 
+USER_AGENT = "pimoroni-presto-train-display/0.1"
+
+
 class RailApiError(Exception):
     pass
 
@@ -66,7 +69,12 @@ class RailApi:
         try:
             response = self.requests.get(
                 url,
-                headers={"x-apikey": self.consumer_key, "accept": "application/json"},
+                headers={
+                    "x-apikey": self.consumer_key,
+                    "accept": "application/json",
+                    # RDM rejects clients that omit a User-Agent with HTTP 403.
+                    "user-agent": USER_AGENT,
+                },
             )
             status = getattr(response, "status_code", 0)
             if status < 200 or status >= 300:

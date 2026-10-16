@@ -211,7 +211,11 @@ the same request as the board:
 ```text
 GET {LDBWS_BASE_URL}/GetDepBoardWithDetails/{CRS}?numRows=10&timeWindow=120
 x-apikey: {RDM_CONSUMER_KEY}
+User-Agent: pimoroni-presto-train-display/0.1
 ```
+
+RDM currently returns HTTP 403 when the `User-Agent` header is omitted, so the
+client sends this application identifier on every request.
 
 Optional destination filtering can later add `filterCrs` and `filterType=to`.
 Station codes and query values must be validated before building the URL.
