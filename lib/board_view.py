@@ -121,9 +121,11 @@ class BoardView:
         self.display.set_pen(self.panel)
         self.display.rectangle(18, 120, 444, 216)
         platform = service.get("platform") or "–"
-        self._text("TRAIN · PLATFORM " + platform, 40, 138, self.muted, 2)
-        self._text(service.get("scheduled") or "--:--", 40, 166, self.cream, 5)
-        self._text(service.get("status", ""), 40, 215, self._status_pen(service), 2, 380)
+        self._text("SELECTED TRAIN", 40, 136, self.muted, 1)
+        self._text(service.get("scheduled") or "--:--", 40, 158, self.cream, 5)
+        self._text("PLATFORM", 326, 160, self.muted, 1)
+        self._text(platform, 326, 178, self.cream, 4)
+        self._text(service.get("status", ""), 40, 207, self._status_pen(service), 2, 250)
 
         journey = service.get("journey_minutes")
         self._text("Journey", 40, 250, self.muted, 2)
