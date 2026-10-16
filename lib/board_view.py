@@ -135,10 +135,5 @@ class BoardView:
 
         minutes = self._minutes_until(clock, service.get("scheduled"))
         countdown = str(minutes) if minutes is not None and minutes <= 180 else "--"
-        self._text("DEPARTS IN", 40, 320, self.muted, 2)
-        self._text(countdown + " MIN", 40, 350, self.cream, 4)
-
-        footer = "Updated just now" if stale_age is None else "Last update %d min ago" % max(1, stale_age // 60)
-        self._text(footer, 24, 443, self.muted, 1)
-        self._text("TAP TO RETURN · NATIONAL RAIL", 238, 443, self.muted, 1)
+        self._text("DEPARTS IN " + countdown + " MIN", 40, 340, self.cream, 2, 400)
         self.presto.update()
