@@ -1,4 +1,4 @@
-"""480x480 platform-style renderer for Pimoroni Presto."""
+"""480x480 platform and journey-focused renderers for Pimoroni Presto."""
 
 
 class BoardView:
@@ -36,6 +36,27 @@ class BoardView:
         self.display.rectangle(422, y, 42, 42)
         self._text(value, 433 if len(value) == 1 else 426, y + 8, self.black, 3)
 
+    def _view_button(self, label):
+        self.display.set_pen(self.dim_amber)
+        self.display.rectangle(362, 426, 106, 40)
+        self._text(label, 375, 437, self.cream, 2)
+
+    def _status_pen(self, service):
+        if service.get("status_kind") == "delayed":
+            return self.amber
+        if service.get("status_kind") == "cancelled":
+            return self.red
+        return self.green
+
+    @staticmethod
+    def _minutes_until(clock, departure):
+        try:
+            now_hour, now_minute = (int(value) for value in clock.split(":"))
+            dep_hour, dep_minute = (int(value) for value in departure.split(":"))
+        except (AttributeError, ValueError):
+            return None
+        return (dep_hour * 60 + dep_minute - now_hour * 60 - now_minute) % 1440
+
     def render_loading(self, message="Connecting to live departures"):
         self._clear()
         self._text("WORCESTER PARK", 28, 50, self.amber, 3)
@@ -67,11 +88,7 @@ class BoardView:
             if index == 0:
                 self.display.set_pen(self.panel)
                 self.display.rectangle(0, y - 8, self.WIDTH, 96)
-            status_pen = self.green
-            if service.get("status_kind") == "delayed":
-                status_pen = self.amber
-            elif service.get("status_kind") == "cancelled":
-                status_pen = self.red
+            status_pen = self._status_pen(service)
             self._text(service.get("scheduled") or "--:--", 24, y, self.amber, 4)
             self._text(service.get("destination", ""), 152, y + 2, self.cream, 2, 245)
             self._text(service.get("status", ""), 336, y + 54, status_pen, 1, 78)
@@ -87,5 +104,54 @@ class BoardView:
         else:
             footer = "Last update %d min ago" % max(1, stale_age // 60)
         self._text(footer, 24, 438, self.muted, 2)
-        self._text("Data: National Rail", 284, 438, self.muted, 2)
+        self._text("National Rail", 255, 443, self.muted, 1)
+        self._view_button("FOCUS")
+        self.presto.update()
+
+    def render_journey(self, board, station_name, destination_name, stale_age=None, clock=""):
+        self._clear()
+        self._text(station_name, 24, 20, self.cream, 3, 355)
+        self._text("→ " + destination_name, 24, 58, self.cream, 3, 390)
+        self._text("STALE" if stale_age is not None else "LIVE", 400, 25, self.red if stale_age is not None else self.green, 2)
+        if clock:
+            self._text(clock, 400, 58, self.cream, 2)
+
+        services = board.get("services", [])
+        if not services:
+            self._text("No departures found", 24, 210, self.cream, 3)
+            self._view_button("BOARD")
+            self.presto.update()
+            return
+
+        service = services[0]
+        self.display.set_pen(self.panel)
+        self.display.rectangle(18, 115, 444, 224)
+        platform = service.get("platform") or "–"
+        self._text("NEXT TRAIN · PLATFORM " + platform, 40, 137, self.muted, 2)
+        self._text(service.get("scheduled") or "--:--", 40, 174, self.cream, 6)
+        self._text(service.get("status", ""), 318, 220, self._status_pen(service), 2, 120)
+
+        journey = service.get("journey_minutes")
+        self._text("Journey", 40, 253, self.muted, 2)
+        self._text((str(journey) + " min") if journey is not None else "-- min", 40, 277, self.cream, 3)
+        self._text("Arrives", 270, 253, self.muted, 2)
+        self._text(service.get("arrival") or "--:--", 270, 277, self.cream, 3)
+        self.display.set_pen(self.green if service.get("status_kind") == "on_time" else self.amber)
+        self.display.rectangle(40, 319, 380, 5)
+
+        minutes = self._minutes_until(clock, service.get("scheduled"))
+        if minutes is not None and minutes <= 180:
+            self._text("DEPARTS IN %d MINUTES" % minutes, 40, 329, self.muted, 1)
+
+        for index, later in enumerate(services[1:3]):
+            x = 18 + index * 226
+            self.display.set_pen(self.panel)
+            self.display.rectangle(x, 354, 218, 62)
+            self._text(later.get("scheduled") or "--:--", x + 16, 365, self.cream, 3)
+            self._text(later.get("status", ""), x + 112, 376, self._status_pen(later), 1, 92)
+
+        footer = "Updated just now" if stale_age is None else "Last update %d min ago" % max(1, stale_age // 60)
+        self._text(footer, 24, 438, self.muted, 2)
+        self._text("National Rail", 255, 443, self.muted, 1)
+        self._view_button("BOARD")
         self.presto.update()

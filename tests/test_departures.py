@@ -17,6 +17,8 @@ class DeparturesTest(unittest.TestCase):
         self.assertEqual(len(board["services"]), 3)
         self.assertEqual(board["services"][0]["status"], "On time")
         self.assertEqual(board["services"][0]["calling_points"][0]["name"], "Motspur Park")
+        self.assertEqual(board["services"][0]["arrival"], "10:52")
+        self.assertEqual(board["services"][0]["journey_minutes"], 10)
         self.assertEqual(board["services"][1]["status"], "Exp 10:59")
         self.assertEqual(board["services"][1]["status_kind"], "delayed")
         self.assertEqual(board["services"][2]["status"], "Cancelled")

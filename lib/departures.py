@@ -104,12 +104,39 @@ def _normalise_status(service, scheduled):
     return "Exp %s" % estimated, "delayed", estimated
 
 
+def _time_minutes(value):
+    try:
+        hour, minute = (int(part) for part in value.split(":"))
+    except (AttributeError, ValueError):
+        return None
+    if not 0 <= hour <= 23 or not 0 <= minute <= 59:
+        return None
+    return hour * 60 + minute
+
+
+def _journey_details(scheduled, calling_points):
+    if not calling_points:
+        return "", None
+    final_point = calling_points[-1]
+    arrival = final_point.get("scheduled") or ""
+    expected = final_point.get("expected") or ""
+    if expected and expected.lower() not in ("on time", "cancelled", "delayed"):
+        arrival = expected
+    departure_minutes = _time_minutes(scheduled)
+    arrival_minutes = _time_minutes(final_point.get("scheduled"))
+    if departure_minutes is None or arrival_minutes is None:
+        return arrival, None
+    return arrival, (arrival_minutes - departure_minutes) % (24 * 60)
+
+
 def normalise_board(payload):
     board = _unwrap_board(payload)
     services = []
     for raw in _service_list(board):
         scheduled = _get(raw, "std", "scheduledDeparture", "scheduledTime", default="") or ""
         status, status_kind, estimated = _normalise_status(raw, scheduled)
+        calling_points = _calling_points(raw)
+        arrival, journey_minutes = _journey_details(scheduled, calling_points)
         destination = _location_name(_get(raw, "destination", "destinations", default=""))
         platform_hidden = bool(
             _get(raw, "platformIsHidden", "platformSuppressed", default=False)
@@ -130,7 +157,9 @@ def normalise_board(payload):
                 "status_kind": status_kind,
                 "cancel_reason": _get(raw, "cancelReason", "cancellationReason", default="") or "",
                 "delay_reason": _get(raw, "delayReason", default="") or "",
-                "calling_points": _calling_points(raw),
+                "calling_points": calling_points,
+                "arrival": arrival,
+                "journey_minutes": journey_minutes,
             }
         )
 
