@@ -10,7 +10,7 @@ The first working milestone includes:
 - a MicroPython RDM client using HTTPS and the `x-apikey` header;
 - flexible Darwin response normalisation for services and calling points;
 - a 480×480 platform-style Presto renderer;
-- an in-app Journey focus view, switched with the bottom-right touch control;
+- an in-app Journey focus view opened by tapping any displayed departure;
 - one-minute refreshes, bounded retry backoff and stale-data retention;
 - automatic Europe/London daylight-saving conversion;
 - configuration and secret templates; and
@@ -89,8 +89,9 @@ uvx mpremote connect /dev/cu.usbmodem101 reset
 ```
 
 Tap **train display** in the carousel to launch it. Press the Presto reset
-button to return to the carousel. Inside the app, tap **FOCUS** or **BOARD** in
-the bottom-right corner to switch views without restarting or refetching data.
+button to return to the carousel. Inside the app, tap any of the three departure
+rows to focus that journey. Tap the Journey focus screen to return to the board;
+switching views does not restart the app or refetch data.
 
 ### Direct-boot mode
 
