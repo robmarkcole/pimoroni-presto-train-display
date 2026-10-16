@@ -99,7 +99,7 @@ class BoardView:
     def render_journey(self, board, station_name, destination_name, selected_index=0, stale_age=None, clock=""):
         self._clear()
         self._text(station_name, 24, 16, self.cream, 3, 355)
-        self._text("→ " + destination_name, 24, 52, self.cream, 3, 440)
+        self._text("To " + destination_name, 24, 52, self.cream, 3, 440)
         self._text("STALE" if stale_age is not None else "LIVE", 400, 20, self.red if stale_age is not None else self.green, 2)
         if clock:
             self._text(clock, 408, 89, self.muted, 2)
