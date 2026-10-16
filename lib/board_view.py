@@ -119,7 +119,7 @@ class BoardView:
         selected_index = min(max(0, selected_index), len(services) - 1)
         service = services[selected_index]
         self.display.set_pen(self.panel)
-        self.display.rectangle(18, 120, 444, 216)
+        self.display.rectangle(18, 120, 444, 296)
         platform = service.get("platform") or "–"
         self._text("SELECTED TRAIN", 40, 136, self.muted, 1)
         self._text(service.get("scheduled") or "--:--", 40, 158, self.cream, 5)
@@ -134,16 +134,9 @@ class BoardView:
         self._text(service.get("arrival") or "--:--", 270, 274, self.cream, 3)
 
         minutes = self._minutes_until(clock, service.get("scheduled"))
-        if minutes is not None and minutes <= 180:
-            self._text("DEPARTS IN %d MIN" % minutes, 40, 314, self.muted, 2)
-
-        other_services = [item for index, item in enumerate(services[:3]) if index != selected_index][:2]
-        for index, later in enumerate(other_services):
-            x = 18 + index * 226
-            self.display.set_pen(self.panel)
-            self.display.rectangle(x, 350, 218, 66)
-            self._text(later.get("scheduled") or "--:--", x + 16, 360, self.cream, 3)
-            self._text(later.get("status", ""), x + 16, 396, self._status_pen(later), 1, 186)
+        countdown = str(minutes) if minutes is not None and minutes <= 180 else "--"
+        self._text("DEPARTS IN", 40, 320, self.muted, 2)
+        self._text(countdown + " MIN", 40, 350, self.cream, 4)
 
         footer = "Updated just now" if stale_age is None else "Last update %d min ago" % max(1, stale_age // 60)
         self._text(footer, 24, 443, self.muted, 1)
