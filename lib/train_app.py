@@ -13,12 +13,13 @@ from lib.uk_time import format_clock
 DEPARTURE_TOP = 96
 DEPARTURE_HEIGHT = 104
 DEPARTURE_COUNT = 3
-STATION_PICKER_TOP = 126
-STATION_PICKER_ROW_HEIGHT = 96
+STATION_PICKER_TOP = 118
+STATION_PICKER_ROW_HEIGHT = 80
 DEFAULT_STATIONS = (
     ("WCP", "Worcester Park"),
     ("MAL", "Malden Manor"),
     ("MOT", "Motspur Park"),
+    ("NEM", "New Malden"),
 )
 
 
