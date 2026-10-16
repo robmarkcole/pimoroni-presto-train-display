@@ -23,6 +23,18 @@ class EntryPointTest(unittest.TestCase):
             runpy.run_path("train_display.py", run_name="train_display")
         train_app.run.assert_called_once_with()
 
+    def test_carousel_entry_has_launcher_metadata(self):
+        with open("train_display.py") as entry_point:
+            header = [entry_point.readline().strip() for _ in range(3)]
+        self.assertEqual(
+            header,
+            [
+                "# ICON travel",
+                "# NAME Train display",
+                "# DESC Live Worcester Park departures",
+            ],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
