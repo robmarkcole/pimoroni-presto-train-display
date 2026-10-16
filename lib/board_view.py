@@ -94,12 +94,6 @@ class BoardView:
                 self._text("via " + names, 152, y + 34, self.muted, 1, 250)
             self._rule(y + 88, self.dim_amber)
 
-        if stale_age is None:
-            footer = "Updated just now"
-        else:
-            footer = "Last update %d min ago" % max(1, stale_age // 60)
-        self._text(footer, 24, 443, self.muted, 1)
-        self._text("TAP TRAIN · NATIONAL RAIL", 278, 443, self.muted, 1)
         self.presto.update()
 
     def render_journey(self, board, station_name, destination_name, selected_index=0, stale_age=None, clock=""):
