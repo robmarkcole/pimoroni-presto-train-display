@@ -10,7 +10,7 @@ required.
 
 - Starts with a touch picker for Worcester Park, Malden Manor, Motspur Park or
   New Malden.
-- Shows the next three direct services to London Waterloo.
+- Shows the next four direct services to London Waterloo.
 - Displays scheduled time, live status, platform and calling points.
 - Opens a Journey focus screen when a departure is tapped.
 - Shows journey duration, arrival time and a live departure countdown.

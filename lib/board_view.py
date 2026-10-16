@@ -89,14 +89,14 @@ class BoardView:
             self._text(clock, 400, 62, self.cream, 2)
         self._rule(91)
 
-        services = board.get("services", [])[:3]
+        services = board.get("services", [])[:4]
         if not services:
             self._text("No departures found", 24, 200, self.cream, 3)
         for index, service in enumerate(services):
-            y = 104 + index * 104
+            y = 104 + index * 86
             if index == 0:
                 self.display.set_pen(self.panel)
-                self.display.rectangle(0, y - 8, self.WIDTH, 96)
+                self.display.rectangle(0, y - 8, self.WIDTH, 78)
             status_pen = self._status_pen(service)
             self._text(service.get("scheduled") or "--:--", 24, y, self.amber, 4)
             self._text(service.get("destination", ""), 152, y + 2, self.cream, 2, 245)
@@ -106,7 +106,7 @@ class BoardView:
             if points:
                 names = " · ".join(point["name"] for point in points[:2])
                 self._text("via " + names, 152, y + 34, self.muted, 1, 250)
-            self._rule(y + 88, self.dim_amber)
+            self._rule(y + 72, self.dim_amber)
 
         self.presto.update()
 

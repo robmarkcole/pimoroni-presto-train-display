@@ -91,6 +91,16 @@ BOARD = {
             "journey_minutes": 28,
             "arrival": "11:40",
         },
+        {
+            "scheduled": "11:27",
+            "destination": "London Waterloo",
+            "status": "On time",
+            "status_kind": "on_time",
+            "platform": "2",
+            "calling_points": [{"name": "Wimbledon"}, {"name": "Clapham Jn"}],
+            "journey_minutes": 28,
+            "arrival": "11:55",
+        },
     ]
 }
 
