@@ -121,15 +121,15 @@ class BoardView:
         self.display.set_pen(self.panel)
         self.display.rectangle(18, 120, 444, 216)
         platform = service.get("platform") or "–"
-        self._text("SELECTED TRAIN · PLATFORM " + platform, 40, 140, self.muted, 2)
-        self._text(service.get("scheduled") or "--:--", 40, 178, self.cream, 5)
-        self._text(service.get("status", ""), 270, 190, self._status_pen(service), 2, 168)
+        self._text("TRAIN · PLATFORM " + platform, 40, 138, self.muted, 2)
+        self._text(service.get("scheduled") or "--:--", 40, 166, self.cream, 5)
+        self._text(service.get("status", ""), 40, 215, self._status_pen(service), 2, 380)
 
         journey = service.get("journey_minutes")
-        self._text("Journey", 40, 247, self.muted, 2)
-        self._text((str(journey) + " min") if journey is not None else "-- min", 40, 271, self.cream, 3)
-        self._text("Arrives", 270, 247, self.muted, 2)
-        self._text(service.get("arrival") or "--:--", 270, 271, self.cream, 3)
+        self._text("Journey", 40, 250, self.muted, 2)
+        self._text((str(journey) + " min") if journey is not None else "-- min", 40, 274, self.cream, 3)
+        self._text("Arrives", 270, 250, self.muted, 2)
+        self._text(service.get("arrival") or "--:--", 270, 274, self.cream, 3)
         self.display.set_pen(self.green if service.get("status_kind") == "on_time" else self.amber)
         self.display.rectangle(40, 313, 380, 5)
 
