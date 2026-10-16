@@ -20,10 +20,11 @@ class TrainAppTest(unittest.TestCase):
 
     def test_station_rows_map_to_picker_indexes(self):
         self.assertEqual(station_index_at(200, 150), 0)
-        self.assertEqual(station_index_at(200, 250), 1)
-        self.assertEqual(station_index_at(200, 350), 2)
+        self.assertEqual(station_index_at(200, 210), 1)
+        self.assertEqual(station_index_at(200, 290), 2)
+        self.assertEqual(station_index_at(200, 370), 3)
         self.assertIsNone(station_index_at(10, 150))
-        self.assertIsNone(station_index_at(200, 430))
+        self.assertIsNone(station_index_at(200, 440))
 
     def test_default_station_codes(self):
         self.assertEqual(
@@ -32,6 +33,7 @@ class TrainAppTest(unittest.TestCase):
                 ("WCP", "Worcester Park"),
                 ("MAL", "Malden Manor"),
                 ("MOT", "Motspur Park"),
+                ("NEM", "New Malden"),
             ),
         )
 

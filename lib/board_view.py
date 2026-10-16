@@ -59,11 +59,11 @@ class BoardView:
         self._rule(105)
         for index, station in enumerate(stations):
             crs, name = station
-            y = 126 + index * 96
+            y = 118 + index * 80
             self.display.set_pen(self.panel)
-            self.display.rectangle(18, y, 444, 82)
-            self._text(name.upper(), 38, y + 24, self.cream, 3, 350)
-            self._text(crs, 410, y + 34, self.muted, 1)
+            self.display.rectangle(18, y, 444, 68)
+            self._text(name.upper(), 38, y + 18, self.cream, 3, 350)
+            self._text(crs, 410, y + 26, self.muted, 1)
         self.presto.update()
 
     def render_loading(self, station_name="TRAIN DISPLAY", message="Connecting to live departures"):

@@ -8,7 +8,8 @@ required.
 
 ## What it does
 
-- Starts with a touch picker for Worcester Park, Malden Manor or Motspur Park.
+- Starts with a touch picker for Worcester Park, Malden Manor, Motspur Park or
+  New Malden.
 - Shows the next three direct services to London Waterloo.
 - Displays scheduled time, live status, platform and calling points.
 - Opens a Journey focus screen when a departure is tapped.
@@ -24,7 +25,7 @@ renderer using representative Darwin data.
 
 | Station picker | Departure board | Journey focus |
 |:--:|:--:|:--:|
-| ![Station picker offering Worcester Park, Malden Manor and Motspur Park](docs/images/presto-station-picker.png) | ![Live-style Worcester Park departure board](docs/images/presto-platform-board.png) | ![Journey focus for a Worcester Park to London Waterloo train](docs/images/presto-journey-focus.png) |
+| ![Station picker offering Worcester Park, Malden Manor, Motspur Park and New Malden](docs/images/presto-station-picker.png) | ![Live-style Worcester Park departure board](docs/images/presto-platform-board.png) | ![Journey focus for a Worcester Park to London Waterloo train](docs/images/presto-journey-focus.png) |
 
 ## Requirements
 

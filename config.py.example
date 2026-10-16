@@ -2,6 +2,7 @@ STATIONS = (
     ("WCP", "Worcester Park"),
     ("MAL", "Malden Manor"),
     ("MOT", "Motspur Park"),
+    ("NEM", "New Malden"),
 )
 DESTINATION_CRS = "WAT"
 DESTINATION_NAME = "London Waterloo"
