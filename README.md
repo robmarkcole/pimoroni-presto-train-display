@@ -73,15 +73,35 @@ uvx mpremote connect /dev/cu.usbmodem101 mount . run tools/presto_smoke.py
 
 ## Install on Presto
 
-Installing this application as `main.py` replaces the stock launcher. Back up
-the current launcher first:
+### Development/demo mode
+
+Keep the stock `main.py` launcher and upload `train_display.py`. The launcher
+automatically discovers it as a carousel item; the implementation lives under
+`lib/` so it does not create a second carousel entry.
+
+```sh
+uvx mpremote connect /dev/cu.usbmodem101 fs cp -r lib :
+uvx mpremote connect /dev/cu.usbmodem101 fs cp train_display.py :train_display.py
+uvx mpremote connect /dev/cu.usbmodem101 fs cp config.py :config.py
+uvx mpremote connect /dev/cu.usbmodem101 fs cp secrets.py :secrets.py
+uvx mpremote connect /dev/cu.usbmodem101 reset
+```
+
+Tap **train display** in the carousel to launch it. Press the Presto reset
+button to return to the carousel.
+
+### Direct-boot mode
+
+Installing the repository's `main.py` replaces the stock launcher and starts
+the train display at power-on. Back up the current launcher first:
 
 ```sh
 mkdir -p backups
 uvx mpremote connect /dev/cu.usbmodem101 fs cp :main.py backups/presto-main.py
 ```
 
-Then upload the application, support modules and your untracked configuration:
+Then upload the direct-boot entry point, support modules and your untracked
+configuration:
 
 ```sh
 uvx mpremote connect /dev/cu.usbmodem101 fs cp -r lib :
