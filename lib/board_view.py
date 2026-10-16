@@ -52,9 +52,23 @@ class BoardView:
             return None
         return (dep_hour * 60 + dep_minute - now_hour * 60 - now_minute) % 1440
 
-    def render_loading(self, message="Connecting to live departures"):
+    def render_station_picker(self, stations, destination_name):
         self._clear()
-        self._text("WORCESTER PARK", 28, 50, self.amber, 3)
+        self._text("CHOOSE STATION", 24, 24, self.amber, 3)
+        self._text("To " + destination_name, 24, 67, self.cream, 2, 430)
+        self._rule(105)
+        for index, station in enumerate(stations):
+            crs, name = station
+            y = 126 + index * 96
+            self.display.set_pen(self.panel)
+            self.display.rectangle(18, y, 444, 82)
+            self._text(name.upper(), 38, y + 24, self.cream, 3, 350)
+            self._text(crs, 410, y + 34, self.muted, 1)
+        self.presto.update()
+
+    def render_loading(self, station_name="TRAIN DISPLAY", message="Connecting to live departures"):
+        self._clear()
+        self._text(station_name.upper(), 28, 50, self.amber, 3)
         self._text(message, 28, 210, self.cream, 2, 420)
         self._text("National Rail Darwin", 28, 420, self.muted, 2)
         self.presto.update()

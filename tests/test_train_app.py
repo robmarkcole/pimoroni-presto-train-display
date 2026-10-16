@@ -1,6 +1,6 @@
 import unittest
 
-from lib.train_app import departure_index_at, is_tap
+from lib.train_app import DEFAULT_STATIONS, departure_index_at, is_tap, station_index_at
 
 
 class TrainAppTest(unittest.TestCase):
@@ -17,6 +17,23 @@ class TrainAppTest(unittest.TestCase):
     def test_drag_is_not_a_tap(self):
         self.assertTrue(is_tap(200, 120, 205, 125))
         self.assertFalse(is_tap(200, 120, 240, 120))
+
+    def test_station_rows_map_to_picker_indexes(self):
+        self.assertEqual(station_index_at(200, 150), 0)
+        self.assertEqual(station_index_at(200, 250), 1)
+        self.assertEqual(station_index_at(200, 350), 2)
+        self.assertIsNone(station_index_at(10, 150))
+        self.assertIsNone(station_index_at(200, 430))
+
+    def test_default_station_codes(self):
+        self.assertEqual(
+            DEFAULT_STATIONS,
+            (
+                ("WCP", "Worcester Park"),
+                ("MAL", "Malden Manor"),
+                ("MOT", "Motspur Park"),
+            ),
+        )
 
 
 if __name__ == "__main__":

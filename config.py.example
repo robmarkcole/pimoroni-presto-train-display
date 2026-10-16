@@ -1,6 +1,9 @@
-ORIGIN_CRS = "WCP"
+STATIONS = (
+    ("WCP", "Worcester Park"),
+    ("MAL", "Malden Manor"),
+    ("MOT", "Motspur Park"),
+)
 DESTINATION_CRS = "WAT"
-STATION_NAME = "Worcester Park"
 DESTINATION_NAME = "London Waterloo"
 
 # Shared endpoint for the current RDM Live Departure Board REST/JSON product.

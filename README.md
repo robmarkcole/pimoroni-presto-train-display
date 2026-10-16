@@ -9,6 +9,7 @@ The first working milestone includes:
 
 - a MicroPython RDM client using HTTPS and the `x-apikey` header;
 - flexible Darwin response normalisation for services and calling points;
+- a launch-time picker for Worcester Park, Malden Manor and Motspur Park;
 - a 480×480 platform-style Presto renderer;
 - an in-app Journey focus view opened by tapping any displayed departure;
 - one-minute refreshes, bounded retry backoff and stale-data retention;
@@ -88,10 +89,11 @@ uvx mpremote connect /dev/cu.usbmodem101 fs cp secrets.py :secrets.py
 uvx mpremote connect /dev/cu.usbmodem101 reset
 ```
 
-Tap **train display** in the carousel to launch it. Press the Presto reset
-button to return to the carousel. Inside the app, tap any of the three departure
-rows to focus that journey. Tap the Journey focus screen to return to the board;
-switching views does not restart the app or refetch data.
+Tap **train display** in the carousel to launch it, then choose Worcester Park,
+Malden Manor or Motspur Park. Press the Presto reset button to return to the
+carousel and choose a different station. Inside the app, tap any of the three
+departure rows to focus that journey. Tap the Journey focus screen to return to
+the board; switching views does not restart the app or refetch data.
 
 ### Direct-boot mode
 
@@ -141,7 +143,8 @@ truth for the JSON service.
 
 Version 1 will:
 
-1. Show live departures for one configured GB station.
+1. Let the user choose one of three configured GB stations, then show its live
+   departures.
 2. Recreate the visual hierarchy of a UK platform display: departure time,
    destination, live status, platform and calling points.
 3. Refresh once per minute without blocking the display between refreshes.
@@ -166,7 +169,6 @@ larger square screen without turning the display into a generic table:
 - Calling points: one or two lines that scroll only when the text does not fit.
 - Following services: three or four compact rows with time, destination, status
   and platform.
-- Footer: National Rail attribution plus `Updated N min ago` when appropriate.
 
 Status presentation:
 
@@ -179,12 +181,10 @@ Status presentation:
 
 ### Touch interactions
 
-Keep touch optional so the device remains useful as an always-on sign:
-
-- Tap the primary service to switch between calling points and service details.
-- Tap the connection/data-age indicator to retry immediately.
-- A later release may add swipeable stations or on-device configuration; neither
-  is required for version 1.
+The launch screen offers Worcester Park, Malden Manor and Motspur Park. Tap a
+station to load its departure board, tap any displayed departure for Journey
+focus, and tap Journey focus to return. Resetting the Presto returns to the
+carousel so the station can be chosen again.
 
 ### Device states
 
@@ -316,7 +316,7 @@ network adapters are exercised on the device.
 
 `config.py` should contain non-secret settings such as:
 
-- departure station CRS code
+- selectable station names and CRS codes
 - optional destination CRS filter
 - refresh interval
 - number of services shown
@@ -458,7 +458,7 @@ never erase a valid cached board.
 
 ## Version 1 acceptance criteria
 
-- A new user can configure Wi-Fi, an RDM key and a CRS code without editing
+- A new user can configure Wi-Fi, an RDM key and station CRS codes without editing
   application logic.
 - The board updates at least every 90 seconds during normal operation.
 - Time, destination, status and platform agree with the corresponding National
