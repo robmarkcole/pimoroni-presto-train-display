@@ -135,7 +135,7 @@ class BoardView:
 
         minutes = self._minutes_until(clock, service.get("scheduled"))
         if minutes is not None and minutes <= 180:
-            self._text("DEPARTS IN %d MINUTES" % minutes, 40, 322, self.muted, 1)
+            self._text("DEPARTS IN %d MIN" % minutes, 40, 314, self.muted, 2)
 
         other_services = [item for index, item in enumerate(services[:3]) if index != selected_index][:2]
         for index, later in enumerate(other_services):
