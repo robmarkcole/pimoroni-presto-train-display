@@ -152,12 +152,13 @@ tests/                  Host test suite and sample Darwin response
 tools/                  On-device smoke test and screenshot renderer
 ```
 
-## Optional Home Assistant source
+## Developed with Codex
 
-A future extension could read National Rail data from
-[`darrenparkinson/homeassistant_nationalrail`](https://github.com/darrenparkinson/homeassistant_nationalrail)
-for users who already run Home Assistant. Direct RDM remains the implemented
-and default source. See [docs/home-assistant.md](docs/home-assistant.md).
+This application was developed iteratively with
+[OpenAI Codex](https://developers.openai.com/codex). Codex helped translate
+feature requests and visual feedback into the MicroPython implementation,
+tests, documentation and interface refinements. The resulting behaviour was
+reviewed and tested on a physical Presto throughout development.
 
 ## Data source
 
