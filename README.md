@@ -6,6 +6,10 @@ directly to National Rail Darwin through the Rail Data Marketplace (RDM)
 REST/JSON API—no Raspberry Pi, server, cloud function or translation proxy is
 required.
 
+## Video
+
+[![Watch the Pimoroni Presto live UK train departure board](https://img.youtube.com/vi/7p9hzEM4UWU/maxresdefault.jpg)](https://youtu.be/7p9hzEM4UWU)
+
 ## What it does
 
 - Starts with a touch picker for Worcester Park, Malden Manor, Motspur Park or
